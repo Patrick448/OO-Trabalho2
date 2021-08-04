@@ -59,7 +59,6 @@ class VendaTest {
     void deveRetornarExcecaoArgumentoNuloCliente(){
         try{
             Produto produto = new Produto("Batata", 100, 1.40f, 50, 150);
-            Cliente cliente = new Cliente("123456", "Patrick");
             Venda venda = new Venda("01/08/2021", produto, null, 100);
 
             fail();

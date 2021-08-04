@@ -50,7 +50,6 @@ class CompraTest {
     void deveRetornarExcecaoArgumentoNuloFornecedor(){
         try{
             Produto produto = new Produto("Batata", 100, 1.40f, 50, 150);
-            Fornecedor fornecedor = new Fornecedor("123456", "X S.A.");
             Compra compra = new Compra("01/08/2021", produto, null, 200);
 
             fail();
