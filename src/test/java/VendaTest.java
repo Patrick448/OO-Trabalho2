@@ -44,6 +44,16 @@ class VendaTest {
         assertEquals(Arrays.asList("Valor venda = 14.0."), produto.exibirHistorico());
     }
 
+    @Test
+    void deveRetornarValorVendaDepoisEstoqueBaixo() {
+        Produto produto = new Produto("Batata", 100, 1.40f, 50, 150);
+        Cliente cliente = new Cliente("123456", "Patrick");
+        Venda venda = new Venda("01/08/2021", produto, cliente, 51);
+        venda.vender(produto, 51);
+
+        assertEquals(Arrays.asList("Valor venda = 71.4.", "Estoque baixo."), produto.exibirHistorico());
+    }
+
 
     @Test
     void deveRetornarExcecaoArgumentoNuloCliente(){
