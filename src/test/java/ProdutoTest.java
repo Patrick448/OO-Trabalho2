@@ -9,14 +9,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class ProdutoTest {
 
     @Test
-    void vender() {
-    }
-
-    @Test
-    void comprar() {
-    }
-
-    @Test
     void deveRetornarEstoqueDebitado() {
         Produto produto = new Produto("Batata", 100, 1.40f, 50, 150);
         produto.debitarEstoque(2);
@@ -77,51 +69,49 @@ class ProdutoTest {
     }
 
     @Test
-    void deveRetornarMensagemValorVenda() {
+    void deveRetornarMensagemVendaSucesso() {
         Produto produto = new Produto("Batata", 100, 1.40f, 50, 150);
         Cliente cliente = new Cliente("123456", "Patrick");
-        Venda venda = new Venda("01/08/2021", produto, cliente, 10);
-        venda.vender(produto, 10);
+        produto.vender("01/08/2021", cliente, 10);
 
-        assertEquals(Arrays.asList("Valor venda = 14.0."), produto.exibirHistorico());
+        List<String> esperado = Arrays.asList("Valor venda = 14.0.", "Venda do produto Batata para Patrick.");
+
+        assertEquals(esperado, produto.exibirHistorico());
     }
 
     @Test
-    void deveRetornarMensagemValorVendaDepoisEstoqueBaixo() {
+    void deveRetornarMensagemVendaSucessoDepoisEstoqueBaixo() {
         Produto produto = new Produto("Batata", 100, 1.40f, 50, 150);
         Cliente cliente = new Cliente("123456", "Patrick");
-        Venda venda = new Venda("01/08/2021", produto, cliente, 51);
-        venda.vender(produto, 51);
+        produto.vender("01/08/2021", cliente, 51);
+        List<String> esperado = Arrays.asList("Valor venda = 71.4.", "Estoque baixo.","Venda do produto Batata para Patrick.");
 
-        assertEquals(Arrays.asList("Valor venda = 71.4.", "Estoque baixo."), produto.exibirHistorico());
+        assertEquals(esperado, produto.exibirHistorico());
     }
 
     @Test
-    void deveRetornarMensagemCompra() {
+    void deveRetornarMensagemCompraSucesso() {
         Produto produto = new Produto("Batata", 100, 1.40f, 50, 150);
         Fornecedor fornecedor = new Fornecedor("123456", "X S.A.");
-        Compra compra = new Compra("01/08/2021", produto, fornecedor, 50);
-        compra.comprar(produto, 50);
+        produto.comprar("01/08/2021", fornecedor, 50);
 
         assertEquals(Arrays.asList("Compra do produto Batata de X S.A.."), produto.exibirHistorico());
     }
 
     @Test
-    void deveRetornarMensagemEstoqueInsuficiente() {
+    void deveRetornarMensagemVendaFalhouEstoqueInsuficiente() {
         Produto produto = new Produto("Batata", 100, 1.40f, 50, 150);
         Cliente cliente = new Cliente("123456", "Patrick");
-        Venda venda = new Venda("01/08/2021", produto, cliente, 101);
-        venda.vender(produto, 101);
+        produto.vender("01/08/2021", cliente, 101);
 
         assertEquals(Arrays.asList("Estoque insuficiente."), produto.exibirHistorico());
     }
 
     @Test
-    void deveRetornarMensagemEstoqueExcedente() {
+    void deveRetornarMensagemCompraFalhouEstoqueExcedente() {
         Produto produto = new Produto("Batata", 100, 1.40f, 50, 150);
         Fornecedor fornecedor = new Fornecedor("123456", "X S.A.");
-        Compra compra = new Compra("01/08/2021", produto, fornecedor, 51);
-        compra.comprar(produto, 51);
+        produto.comprar("01/08/2021", fornecedor, 51);
 
         assertEquals(Arrays.asList("Estoque excedente."), produto.exibirHistorico());
     }
@@ -132,18 +122,18 @@ class ProdutoTest {
         Fornecedor fornecedor = new Fornecedor("123456", "X S.A.");
         Cliente cliente = new Cliente("123456", "Patrick");
 
-        Compra compra = new Compra("01/08/2021", produto, fornecedor, 51);
-        compra.comprar(produto, 51);
-        compra.comprar(produto, 50);
+        produto.comprar("01/08/2021", fornecedor, 51);
+        produto.comprar("01/08/2021", fornecedor, 50);
+        produto.vender("01/08/2021", cliente, 151);
+        produto.vender("01/08/2021", cliente, 150);
 
-        Venda venda = new Venda("01/08/2021", produto, cliente, 100);
-        venda.vender(produto, 151);
-        venda.vender(produto, 150);
         List<String> esperado = Arrays.asList(
-                "Estoque excedente.", "Compra do produto Batata de X S.A..",
+                "Estoque excedente.",
+                "Compra do produto Batata de X S.A..",
                 "Estoque insuficiente.",
                 "Valor venda = 210.0.",
-                "Estoque baixo.");
+                "Estoque baixo.",
+                "Venda do produto Batata para Patrick.");
 
 
         assertEquals(esperado, produto.exibirHistorico());
@@ -179,6 +169,50 @@ class ProdutoTest {
             fail();
         }catch (IllegalArgumentException e){
             assertEquals("O argumento nome nao pode ser nulo.", e.getMessage());
+        }
+    }
+
+    @Test
+    void deveRetornarExcecaoArgumentoNegativoQuantidadeEstoque(){
+        try{
+            Produto produto = new Produto("Batatas", -100, 1.40f, 50, 150);
+
+            fail();
+        }catch (IllegalArgumentException e){
+            assertEquals("O argumento quantidadeEstoque nao pode ser negativo.", e.getMessage());
+        }
+    }
+
+    @Test
+    void deveRetornarExcecaoArgumentoNegativoPrecoUnitario(){
+        try{
+            Produto produto = new Produto("Batatas", 100, -1.40f, 50, 150);
+
+            fail();
+        }catch (IllegalArgumentException e){
+            assertEquals("O argumento precoUnitario nao pode ser negativo.", e.getMessage());
+        }
+    }
+
+    @Test
+    void deveRetornarExcecaoArgumentoNegativoEstoqueMinimo(){
+        try{
+            Produto produto = new Produto("Batatas", 100, 1.40f, -50, 150);
+
+            fail();
+        }catch (IllegalArgumentException e){
+            assertEquals("O argumento estoqueMinimo nao pode ser negativo.", e.getMessage());
+        }
+    }
+
+    @Test
+    void deveRetornarExcecaoArgumentoNegativoEstoqueMaximo(){
+        try{
+            Produto produto = new Produto("Batatas", 100, 1.40f, 50, -150);
+
+            fail();
+        }catch (IllegalArgumentException e){
+            assertEquals("O argumento estoqueMaximo nao pode ser negativo.", e.getMessage());
         }
     }
 }

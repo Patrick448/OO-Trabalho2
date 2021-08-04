@@ -44,31 +44,6 @@ class VendaTest {
         assertEquals(Arrays.asList("Valor venda = 14.0."), produto.exibirHistorico());
     }
 
-    @Test
-    void deveRetornarExcecaoArgumentoNuloData(){
-        try{
-            Produto produto = new Produto("Batata", 100, 1.40f, 50, 150);
-            Cliente cliente = new Cliente("123456", "Patrick");
-            Venda venda = new Venda(null, produto, cliente, 100);
-
-            fail();
-        }catch (IllegalArgumentException e){
-            assertEquals("O argumento data nao pode ser nulo.", e.getMessage());
-        }
-    }
-
-    @Test
-    void deveRetornarExcecaoArgumentoNuloProduto(){
-        try{
-            Produto produto = new Produto("Batata", 100, 1.40f, 50, 150);
-            Cliente cliente = new Cliente("123456", "Patrick");
-            Venda venda = new Venda("01/08/2021", null, cliente, 100);
-
-            fail();
-        }catch (IllegalArgumentException e){
-            assertEquals("O argumento produto nao pode ser nulo.", e.getMessage());
-        }
-    }
 
     @Test
     void deveRetornarExcecaoArgumentoNuloCliente(){

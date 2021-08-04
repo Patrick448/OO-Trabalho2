@@ -17,10 +17,7 @@ public class Compra extends Transacao{
             produto.resgistrarHistorico("Estoque excedente.");
             return false;
         }
-        String descEvento = "Compra do produto " + produto.getNome() + " de " + this.fornecedor.getNome() + ".";
         produto.creditarEstoque(quantidade);
-        produto.resgistrarHistorico(descEvento);
-
 
         return true;
     }

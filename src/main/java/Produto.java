@@ -13,6 +13,18 @@ public class Produto {
         if(nome==null){
             throw new IllegalArgumentException("O argumento nome nao pode ser nulo.");
         }
+        if(precoUnitario<0f){
+            throw new IllegalArgumentException("O argumento precoUnitario nao pode ser negativo.");
+        }
+        if(quantidadeEstoque<0){
+            throw new IllegalArgumentException("O argumento quantidadeEstoque nao pode ser negativo.");
+        }
+        if(estoqueMinimo<0){
+            throw new IllegalArgumentException("O argumento estoqueMinimo nao pode ser negativo.");
+        }
+        if(estoqueMaximo<0){
+            throw new IllegalArgumentException("O argumento estoqueMaximo nao pode ser negativo.");
+        }
 
         this.nome = nome;
         this.quantidadeEstoque = quantidadeEstoque;
@@ -23,27 +35,17 @@ public class Produto {
     }
 
     public String getNome() {
-        return nome;
+        return this.nome;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
 
     public float getPrecoUnitario() {
-        return precoUnitario;
+        return this.precoUnitario;
     }
 
-    public void setPrecoUnitario(float precoUnitario) {
-        this.precoUnitario = precoUnitario;
-    }
 
     public int getQuantidadeEstoque() {
-        return quantidadeEstoque;
-    }
-
-    public void setQuantidadeEstoque(int quantidadeEstoque) {
-        this.quantidadeEstoque = quantidadeEstoque;
+        return this.quantidadeEstoque;
     }
 
     public void debitarEstoque(int quantidade){
@@ -73,7 +75,7 @@ public class Produto {
     public void vender(String data, Cliente cliente, int quatidade){
         Venda venda = new Venda(data,this,cliente,  quatidade);
         if(venda.vender(this, quatidade)){
-            this.resgistrarHistorico("Venda do produto " + this.getNome() + ".");
+            this.resgistrarHistorico("Venda do produto " + this.getNome() + " para "+cliente.getNome()+".");
         }
     }
 
@@ -81,7 +83,7 @@ public class Produto {
         Compra compra = new Compra(data, this, fornecedor, quantidade);
 
         if(compra.comprar(this, quantidade)){
-            this.resgistrarHistorico("Compra do produto " + this.getNome() + ".");
+            this.resgistrarHistorico("Compra do produto " + this.getNome() + " de "+fornecedor.getNome()+".");
         }
     }
 
